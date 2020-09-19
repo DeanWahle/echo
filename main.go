@@ -1,22 +1,21 @@
 package main
 
 import (
+	"fmt"
 	"net/http"
-	"github.com/labstack/echo/v4"
-	"github.com/labstack/echo/v4/middleware"
 )
 
-	func main(){
-	e := echo.New()
+func main() {
 
-	e.Use(middleware.Logger())
-	e.Use(middleware.Recover())
+	mux := http.NewServeMux()
 
-	e.GET("/", hello)
+	mux.HandleFunc("/", func(res http.ResponseWriter, req *http.Request) {
+		fmt.Fprint(res, "Hello World!")
+	})
 
-	e.Logger.Fatal(e.Start(":1323"))
-	}
+	mux.HandleFunc("/hello/golang", func(res http.ResponseWriter, req *http.Request) {
+		fmt.Fprint(res, "Hello Golang!")
+	})
 
-	func hello(c echo.Context) error {
-		return c.String(http.StatusOK, "Good Uncle")
-	}
+	http.ListenAndServe(":9000", mux)
+}
