@@ -10,11 +10,11 @@ func main() {
 	mux := http.NewServeMux()
 
 	mux.HandleFunc("/", func(res http.ResponseWriter, req *http.Request) {
-		fmt.Fprint(res, "Hello World!")
+		fmt.Fprint(res, "Good Uncle")
 	})
 
 	mux.HandleFunc("/hello/golang", func(res http.ResponseWriter, req *http.Request) {
-		fmt.Fprint(res, "Hello Golang!")
+		fmt.Fprint(res, "Food for college!")
 	})
 
 	http.ListenAndServe(":9000", mux)
