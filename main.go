@@ -1,5 +1,9 @@
 package main
 
+//Added goFMT file watcher
+//added .gitignore for .idea
+//removed additional libraries
+
 import (
 	"fmt"
 	"net/http"
