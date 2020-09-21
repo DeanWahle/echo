@@ -1,25 +1,28 @@
 package main
 
-//Added goFMT file watcher
-//added .gitignore for .idea
-//removed additional libraries
-
 import (
-	"fmt"
+	"encoding/json"
+	"io"
+	"log"
 	"net/http"
 )
 
+type RequestBody struct {
+	Message string
+}
+
 func main() {
+	h1 := func(w http.ResponseWriter, req *http.Request) {
+		var b RequestBody
+		err := json.NewDecoder(req.Body).Decode(&b)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
+		}
+		io.WriteString(w, b.Message)
+	}
 
-	mux := http.NewServeMux()
+	http.HandleFunc("/", h1)
 
-	mux.HandleFunc("/", func(res http.ResponseWriter, req *http.Request) {
-		fmt.Fprint(res, "Good Uncle")
-	})
-
-	mux.HandleFunc("/hello/golang", func(res http.ResponseWriter, req *http.Request) {
-		fmt.Fprint(res, "Food for college!")
-	})
-
-	http.ListenAndServe(":9000", mux)
+	log.Fatal(http.ListenAndServe(":8080", nil))
 }
