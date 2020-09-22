@@ -1,28 +1,24 @@
 package main
 
 import (
-	"encoding/json"
-	"io"
+	"io/ioutil"
 	"log"
 	"net/http"
 )
 
-type RequestBody struct {
-	Message string
-}
-
 func main() {
-	h1 := func(w http.ResponseWriter, req *http.Request) {
-		var b RequestBody
-		err := json.NewDecoder(req.Body).Decode(&b)
+	responseFunction := func(w http.ResponseWriter, req *http.Request) {
+		body, err := ioutil.ReadAll(req.Body)
+
 		if err != nil {
-			http.Error(w, err.Error(), http.StatusBadRequest)
-			return
+			log.Fatal(err)
 		}
-		io.WriteString(w, b.Message)
+
+		w.Write(body)
+
 	}
 
-	http.HandleFunc("/", h1)
+	http.HandleFunc("/", responseFunction)
 
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }
